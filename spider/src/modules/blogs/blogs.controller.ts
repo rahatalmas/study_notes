@@ -1,13 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 
 @Controller('blogs')
+@UsePipes(new ValidationPipe())
 export class BlogsController {
   constructor(private readonly blogsService: BlogsService) {}
 
-  @Post()
+  @Post('/upload')
   create(@Body() createBlogDto: CreateBlogDto) {
     return this.blogsService.create(createBlogDto);
   }
@@ -22,9 +23,9 @@ export class BlogsController {
     return this.blogsService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch('update/:id')
   update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto) {
-    return this.blogsService.update(+id, updateBlogDto);
+    return this.blogsService.update(id, updateBlogDto);
   }
 
   @Delete(':id')

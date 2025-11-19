@@ -8,6 +8,10 @@ let u: user={
     email:"bmrahatalmas@gmail.com"
 }
 
+// let a: user={
+//     name:"abcd",
+// }
+
 type p_user = Partial<user>
 
 let u_u: p_user={

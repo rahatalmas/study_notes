@@ -42,19 +42,19 @@ export const create = async(req: Request, res: Response, next: NextFunction)=>{
    const req_data: InsertUser = req.body;
    console.log(req_data)
    res.send("data received")
-   //const validation_flag = req_body_validator(req_data)
-   //console.log("Validation flag",validation_flag)
-   // if(validation_flag){
-   //  try{
-   //    const final_data:InsertUser = createUser(req_data)
-   //    db.collection('users').insertOne(final_data)
-   //    res.send({"data":final_data})
-   //  }catch(err){
-   //    console.log(err)
-   //  }
-   // }else{
-   //  res.send({"message":"invalid data formation","data":req_data})
-   // }
+   const validation_flag = req_body_validator(req_data)
+   console.log("Validation flag",validation_flag)
+   if(validation_flag){
+    try{
+      const final_data:InsertUser = createUser(req_data)
+      db.collection('users').insertOne(final_data)
+      res.send({"data":final_data})
+    }catch(err){
+      console.log(err)
+    }
+   }else{
+    res.send({"message":"invalid data formation","data":req_data})
+   }
 }
 
 export const findById = async(req: Request, res: Response, next: NextFunction)=>{
