@@ -6,14 +6,8 @@ import { Blog } from './entities/blog.entity';
 @Injectable()
 export class BlogsService {
   create(createBlogDto: CreateBlogDto) {
-    let data = new Blog(
-      createBlogDto.title,
-      createBlogDto.author_id,
-      createBlogDto.status,
-      createBlogDto.summary,
-      createBlogDto.content
-    )
-   return data
+    let blog = new Blog(createBlogDto)
+    return blog
   }
 
   findAll() {

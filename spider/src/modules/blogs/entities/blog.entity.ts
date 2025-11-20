@@ -1,4 +1,5 @@
 import { MetaDataDto } from "../../../common/meta-dat.dto"
+import { CreateBlogDto } from "../dto/create-blog.dto"
 
 export class Blog extends MetaDataDto{
     private title: string
@@ -9,14 +10,14 @@ export class Blog extends MetaDataDto{
     private meta_title: string 
     private meta_description: string
     
-    constructor(title,author_id,status,summary,content){
+    constructor(data: CreateBlogDto){
         super()
-        this.title = title;
-        this.author_id = author_id;
-        this.status = status;
-        this.summary = summary;
-        this.content = content;
+        this.title = data.title;
+        this.author_id = data.author_id;
+        this.status = data.status;
+        this.summary = data.summary;
+        this.content = data.content;
         this.meta_title = "seo meta title";
-        this.meta_description = "seo description"
+        this.meta_description = "seo description";
     }
 }
