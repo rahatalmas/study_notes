@@ -11,7 +11,7 @@ import { AuthRepo } from './auth.repo';
     JwtModule.register({
       global:true,
       secret: jwtConstants.secret,
-      signOptions:{expiresIn:'15m'}
+      signOptions:{expiresIn:'1d'}
     }),
     MongoModule
   ],
