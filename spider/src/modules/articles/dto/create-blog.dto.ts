@@ -1,5 +1,6 @@
 import { IsString, IsNotEmpty, IsArray, Length, min } from "class-validator"
 
+//default blog dto
 export class CreateBlogDto{
     @IsNotEmpty()
     @IsString()

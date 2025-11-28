@@ -13,13 +13,20 @@ export class AuthService {
         private readonly authRepo: AuthRepo
     ){}
 
+    //method for generating access token
     async generate_access_token(payload: any){
        let token = await this.jwtService.signAsync(payload)
        return token
     }
+    
+    //method for hashing password
     hashPassword(pass:string) {return bcrypt.hash(pass,10)}
+
+    //method for varifying password
     comparePassword(present: string, permanent: string){return bcrypt.compare(present,permanent)}
     
+    //method for registration process
+    //used in register() controller
     async register(registrationDto: RegistrationDto) {
         let lookup = await this.authRepo.findByEmail(registrationDto.email)
         if(lookup){
@@ -31,6 +38,8 @@ export class AuthService {
         return new ResponseInterface({message:"registration successful",data:new_user})
     }
 
+    //method for login process
+    //used in login() controller
     async login(data: LoginDto){
         let user = await this.authRepo.findByEmail(data.email)
         if(!user){

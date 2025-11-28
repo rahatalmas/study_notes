@@ -5,6 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 
+//global exception filter for catching all errors and exceptions
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {

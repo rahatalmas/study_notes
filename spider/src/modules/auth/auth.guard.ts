@@ -8,6 +8,9 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { jwtConstants } from './jwt-constant';
 
+
+//auth guard for varifying a token is valid or not
+//this ensuring authorization
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private jwtService: JwtService) {}

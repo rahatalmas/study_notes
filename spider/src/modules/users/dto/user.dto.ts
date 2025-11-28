@@ -1,6 +1,7 @@
 import { PartialType } from '@nestjs/swagger';
 import {IsArray,IsString} from 'class-validator';
 
+//default user dto for updating users information.
 export class UserDto {
     @IsString()
     fullname: string

@@ -1,5 +1,6 @@
 import { IsNotEmpty,IsOptional,IsString } from "class-validator";
 
+//default dto for comments
 export class CreateCommentDto{
     @IsNotEmpty()
     @IsString()

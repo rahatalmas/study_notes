@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { MongoClient } from "mongodb";
-
+//module for using database access
 const mongoprovider = {
     provide:"MONGO_DB",
     useFactory:async ()=>{

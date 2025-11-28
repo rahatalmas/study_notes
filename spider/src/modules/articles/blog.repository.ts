@@ -12,6 +12,8 @@ export class BlogRepository{
     private readonly collection="blogs";
     constructor(@Inject("MONGO_DB") private readonly db:Db){}
     
+    //this method implements query for saving a blog to the collection
+    //used in create() method in service
     async save(blog: Blog){
        try{
           let res = await this.db.collection(this.collection).insertOne(blog)
@@ -21,15 +23,18 @@ export class BlogRepository{
        }
     }
 
-    // async saveWithAuthorSubset(){
-
-    // }
+    async saveWithAuthorSubset(){
+       console.log("for testing, maybe implement later if necessary...")
+    }
     
+    //this method implements query for returning list of blogs
     async findAll(): Promise<Blog[]>{
         let blogs = await this.db.collection(this.collection).find().toArray() as Blog[]
         return blogs;
     }
 
+    //this method implements query for returning list of blogs with author information
+    //used in findAll() method in service
     async findAllWithAuthor() {
             const blogs = await this.db.collection(this.collection).aggregate([
             {
@@ -53,7 +58,8 @@ export class BlogRepository{
 
             return blogs;
     }
-
+    //this method implements query for returning specific blogs with author information
+    //used in findOne() method in service
     async findByIdWithAuthor(id: string){
         let bId = MongoIdValidator(id)
         let res = this.db.collection(this.collection).aggregate(
@@ -83,12 +89,15 @@ export class BlogRepository{
         return res
     }
 
+    //this method implements query for removing a blog
+    //used in remove() method in service
     async removeBlog(id: string){
         let bId = MongoIdValidator(id)
         let res = await this.db.collection(this.collection).deleteOne({_id: bId})
         return res
     }
     
+    //this method implements query for returning a specific blog
     async findById(id: string){
         let bId = MongoIdValidator(id)
         let res = await this.db.collection(this.collection).findOne({
@@ -97,6 +106,8 @@ export class BlogRepository{
         return res
     }
 
+    //this method implements query for updating a blog
+    //used in update() method in service
     async updateBlog(id:string,data: UpdateBlogDto){
        let bId = MongoIdValidator(id)
        let res = await this.db.collection(this.collection).updateOne(

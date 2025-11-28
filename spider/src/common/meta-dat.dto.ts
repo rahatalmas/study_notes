@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb"
-
+//meta data for entities
 export class MetaDataDto{
     _id?: ObjectId
     created_at: string

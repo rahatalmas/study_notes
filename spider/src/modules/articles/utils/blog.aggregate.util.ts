@@ -1,3 +1,5 @@
+//object used in aggregation
+//for sanitizing response
 export let blogProject = {
         status:1,
         title:1,

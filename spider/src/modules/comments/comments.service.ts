@@ -8,8 +8,10 @@ import { ResponseInterface } from '../../common/interface/response.interface';
 
 @Injectable()
 export class CommentsService {
+  //db is for database queries
   constructor(private readonly db: CommentRepository){}
 
+  //adds a new comment to a post
   async create(createCommentDto: CreateCommentDto) {
     let comment = new CommentEntity(createCommentDto)
     let res = await this.db.addComment(comment);
@@ -19,10 +21,12 @@ export class CommentsService {
     return new ResponseInterface({message:"comment added",data:comment})
   }
   
+  //updates a comment
   update(id: number, updateCommentDto: UpdateCommentDto) {
     return `This action updates a #${id} comment`;
   }
 
+  //removes a comment
   async remove(removeCommentDto: RemoveCommentDto) {
     let res = await this.db.removeComment(removeCommentDto.blog_id,removeCommentDto.user_id,removeCommentDto.comment_id);
     return new ResponseInterface({message:"comment deleted",data:res})

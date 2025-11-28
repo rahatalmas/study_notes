@@ -8,6 +8,7 @@ import {
     InternalServerErrorException 
 } from "@nestjs/common";
 
+//method for validating a id is valid mongodb id or not
 export function MongoIdValidator(id: string){
     if(!ObjectId.isValid(id)){
         throw new BadRequestException("invalid id param")
@@ -16,6 +17,7 @@ export function MongoIdValidator(id: string){
     }
 }
 
+//method mongo db query result validation...
 export function MongoQueryResultValidator(
     res: 
         | UpdateResult<Document>

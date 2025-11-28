@@ -1,3 +1,4 @@
+//response model for seccessful execution
 export class ResponseInterface{
     status:string
     message:string
