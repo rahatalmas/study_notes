@@ -8,6 +8,9 @@ import { UpdateBlogDto } from './dto/update-blog.dto';
 export class BlogsController {
   //blog service implements the business logics
   constructor(private readonly blogsService: BlogsService) {}
+
+  //this controller creates a new blog
+  //route: http://hostname/blogs/post
   @Post('/post')
   create(@Body() createBlogDto: CreateBlogDto) {
     return this.blogsService.create(createBlogDto);
