@@ -10,7 +10,7 @@ export class UsersRepo{
 
     //this method finds all the users from the collection
     async findAll(){
-        let res = await this.db.collection(this.collection).find().toArray()
+        let res = await this.db.collection(this.collection).find({password:0}).toArray()
         return res
     }
 
@@ -27,10 +27,12 @@ export class UsersRepo{
     async update(id: string, data: UpdateUserDto) {
     const updateOp: any = {};
 
+    //adding skills
     if (data.skills) {
         updateOp.$addToSet = { skills: { $each: data.skills } };
     }
 
+    //adding experience 
     if (data.experience) {
         updateOp.$addToSet = {
         ...updateOp.$addToSet,
@@ -38,11 +40,13 @@ export class UsersRepo{
         };
     }
 
+    //destructuring other values
     const { skills, experience, ...rest } = data;
     if (Object.keys(rest).length > 0) {
         updateOp.$set = rest;
     }
 
+    //update query
     return await this.db.collection(this.collection)
         .updateOne({ _id: new ObjectId(id) }, updateOp);
     }
@@ -67,6 +71,8 @@ export class UsersRepo{
         return res
     }
 
+    //this method is for updating a skill or experience
+    //example: a user want to update backend to backend-development .. 
     async replaceSkillOrExperience(
         userId: string,
         queryType: string,
