@@ -6,11 +6,17 @@ export let blogProject = {
         content:1,
         summary:1,
         tags:1,
-        likes:1,
-        comments:1,
+        likesCount:1,
+        commentsCount:1,
+        //likesCount:1,
         author:{
                 fullname:1,
                 username:1,
                 dp_uri:1
-              }
+        },
+        comments:{
+                _id:1,
+                comment:1
+        }
+        
 }

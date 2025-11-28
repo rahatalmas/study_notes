@@ -1,65 +1,91 @@
 import { Inject, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { Db} from "mongodb";
-import { CommentEntity } from "./entities/comment.entity";
 import { MongoIdValidator } from "../../common/utils/mongo.util";
+import { CreateCommentDto } from "./dto/create-comment.dto";
+import { UpdateCommentDto } from "./dto/update-comment.dto";
 
 @Injectable()
 export class CommentRepository{
-    collection = "blogs"
+    commentCollection = "comments"
+    blogCollection = "blogs"
     constructor(@Inject("MONGO_DB") private readonly db:Db){}
-    
-    //query for adding comments
-    async addComment(comment: CommentEntity){
-        let blogId = MongoIdValidator(comment.blog_id)
 
-        let res = await this.db.collection(this.collection).updateOne(
-            {_id: blogId},
-            {$push:{
-                comments:{
-                   ...comment
-                }as any
-            }}
-        )
-        return res;
+    async allComments(){
+        let comments = await this.db.collection(this.commentCollection).find().toArray()
+        return comments
+    }
+
+    //logic and query for adding comments
+    async addComment(comment: CreateCommentDto){
+        const session = this.db.client.startSession()
+        session.startTransaction()
+        try{
+            const res = await this.db.collection(this.commentCollection).insertOne(comment,{session})
+            console.log(res)
+            const res2 = await this.db.collection(this.blogCollection).updateOne(
+                {
+                    _id: MongoIdValidator(comment.blog_id)
+                },
+                {
+                    $inc:{commentsCount:1}
+                },
+                {
+                    upsert:true,
+                    session
+                }
+            )
+            await session.commitTransaction()
+            return res
+        }catch(err){
+            await session.abortTransaction()
+            console.log(err)
+            throw err
+        }finally{
+            await session.endSession()
+        }
     }
     
     //logics and query for removing comments
-    async removeComment(b_id: string, u_id: string, c_id: string) {
-        console.log("remove comment repo")
-        const blogId = MongoIdValidator(b_id);
-        const commentId = MongoIdValidator(c_id);
-        const userId = MongoIdValidator(u_id);
-        
-        //finds the blog with the given comment id
-        const blog = await this.db.collection(this.collection).findOne(
-            {
-                _id: blogId,
-                "comments._id": commentId
-            },
-            {
-                projection: {
-                    comments: { $elemMatch: { _id: commentId } }
-                }
+    async removeComment(blogId: string,userId: string,commentId: string) {
+        const session = this.db.client.startSession()
+        session.startTransaction()
+        try{
+            const res = await this.db.collection(this.commentCollection).deleteOne(
+                {
+                    $and:[
+                       { _id: MongoIdValidator(commentId)},{user_id:userId}
+                    ]
+                },   
+            )
+            if(res.deletedCount>0){
+                const res2 = await this.db.collection(this.blogCollection).updateOne(
+                    {_id: MongoIdValidator(blogId)},
+                    {$inc:{commentsCount:-1}}
+                )
+            }else{
+                throw new NotFoundException("no comment found with the id")
             }
-        );
-        if (!blog || !blog.comments?.length) {
-            throw new NotFoundException("comment not found");
+            await session.commitTransaction()
+        }catch(err){
+            await session.abortTransaction()
+            throw err
+        }finally{
+            await session.endSession()
         }
-
-        const comment = blog.comments[0];
-        if (comment.user_id.toString() !== userId.toString()) {
-            throw new UnauthorizedException("cannot delete others comments");
-        }
-
-        let res = await this.db.collection(this.collection).updateOne(
-            { _id: blogId },
-            { $pull: { comments: { _id: commentId } } as any }
-        );
-
-        return res;
     }
 
-    async updateComment(b_id,c_id){
-
+    async updateComment(updateCommentDto: UpdateCommentDto){
+        let res = await this.db.collection(this.commentCollection).updateOne(
+            {
+                $and:[
+                    {_id:MongoIdValidator(updateCommentDto.comment_id)},
+                    {user_id:updateCommentDto.user_id}
+                ]
+            },
+            {
+                $set: {comment:updateCommentDto.comment}  
+            }
+        )
+        return res
     }
 }

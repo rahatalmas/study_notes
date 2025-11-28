@@ -11,8 +11,8 @@ export class Blog extends MetaDataDto{
     meta_title: string 
     meta_description: string
     tags: string[]
-    likes: string[]
-    comments: string[]
+    commentsCount:number
+    likesCount:number
     
     constructor(data: CreateBlogDto){
         super()
@@ -24,7 +24,7 @@ export class Blog extends MetaDataDto{
         this.tags = data.tags
         this.meta_title = "seo meta title";
         this.meta_description = "seo description";
-        this.likes=[]
-        this.comments=[]
+        this.commentsCount=0
+        this.likesCount=0
     }
 }

@@ -15,12 +15,9 @@ export class BlogRepository{
     //this method implements query for saving a blog to the collection
     //used in create() method in service
     async save(blog: Blog){
-       try{
-          let res = await this.db.collection(this.collection).insertOne(blog)
-          return res
-       }catch(err){
-          throw new InternalServerErrorException("Failed To save Blog")
-       }
+       //need to implement logics to check user exists with the id or not..
+       let res = await this.db.collection(this.collection).insertOne(blog)
+       return res
     }
 
     async saveWithAuthorSubset(){
@@ -28,14 +25,13 @@ export class BlogRepository{
     }
     
     //this method implements query for returning list of blogs
-    async findAll(): Promise<Blog[]>{
-        let blogs = await this.db.collection(this.collection).find().toArray() as Blog[]
-        return blogs;
+    async findAll() {
+        return "all blogs"
     }
-
+     
     //this method implements query for returning list of blogs with author information
     //used in findAll() method in service
-    async findAllWithAuthor() {
+    async findAllWithRefs() {
             const blogs = await this.db.collection(this.collection).aggregate([
             {
                 $lookup: {
@@ -49,6 +45,19 @@ export class BlogRepository{
                 $unwind: {
                     path: "$author",
                     preserveNullAndEmptyArrays: true
+                }
+            },
+            {
+                $addFields: {
+                    blog_id_str: { $toString: "$_id" }
+                }
+            },
+            {
+                $lookup: {
+                    from:"comments",
+                    localField:"blog_id_str",
+                    foreignField:"blog_id",
+                    as: "comments"
                 }
             },
             {

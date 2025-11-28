@@ -8,5 +8,6 @@ import { MongoModule } from '../../common/modules/mongo.module';
   imports:[MongoModule],
   controllers: [BlogsController],
   providers: [BlogsService, BlogRepository],
+  exports:[BlogRepository]
 })
 export class BlogsModule {}

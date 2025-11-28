@@ -8,27 +8,31 @@ import { ResponseInterface } from '../../common/interface/response.interface';
 
 @Injectable()
 export class CommentsService {
-  //db is for database queries
-  constructor(private readonly db: CommentRepository){}
+  //commentRepo is for database queries
+  constructor(private readonly commentRepo: CommentRepository){}
+
+  async findAll(){
+    let res = await this.commentRepo.allComments()
+    return res
+  }
 
   //adds a new comment to a post
   async create(createCommentDto: CreateCommentDto) {
-    let comment = new CommentEntity(createCommentDto)
-    let res = await this.db.addComment(comment);
-    if(res.matchedCount==0){
-       return new NotFoundException("blog not found")
-    }
-    return new ResponseInterface({message:"comment added",data:comment})
+    console.log("Service: ",createCommentDto)
+    let res = await this.commentRepo.addComment(createCommentDto);
+    console.log("response: ",res)
+    return new ResponseInterface({message:"comment added",data:res})
   }
   
   //updates a comment
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  async update(updateCommentDto: UpdateCommentDto) {
+      let res = await this.commentRepo.updateComment(updateCommentDto)
+      return new ResponseInterface({message:"comment updated",data:res})
   }
 
   //removes a comment
   async remove(removeCommentDto: RemoveCommentDto) {
-    let res = await this.db.removeComment(removeCommentDto.blog_id,removeCommentDto.user_id,removeCommentDto.comment_id);
+    let res = await this.commentRepo.removeComment(removeCommentDto.blog_id,removeCommentDto.user_id,removeCommentDto.comment_id);
     return new ResponseInterface({message:"comment deleted",data:res})
   }
 }

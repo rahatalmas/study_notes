@@ -1,4 +1,5 @@
 import { IsNotEmpty,IsOptional,IsString } from "class-validator";
+import { MetaDataDto } from "../../../common/meta-dat.dto";
 
 //default dto for comments
 export class CreateCommentDto{
@@ -10,17 +11,10 @@ export class CreateCommentDto{
     @IsNotEmpty()
     user_id: string
 
-    @IsNotEmpty()
-    @IsString()
-    user_name: string
-
-    @IsOptional()
-    @IsString()
-    dp_uri?:string
-
     @IsString()
     comment:string
     
+    @IsOptional()
     @IsString()
-    reply_to: string
+    reply_to?: string
 }

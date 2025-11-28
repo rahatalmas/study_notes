@@ -4,7 +4,7 @@ import { MongoClient } from "mongodb";
 const mongoprovider = {
     provide:"MONGO_DB",
     useFactory:async ()=>{
-        let mongo = new MongoClient("mongodb://localhost:27017/")
+        let mongo = new MongoClient("mongodb+srv://cappuccino:letscode5599$@codecaffee.o7etasv.mongodb.net/?appName=codecaffee")
         try{
             await mongo.connect()
             let db = mongo.db("dev_community")

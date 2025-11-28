@@ -10,7 +10,7 @@ export class UsersRepo{
 
     //this method finds all the users from the collection
     async findAll(){
-        let res = await this.db.collection(this.collection).find({password:0}).toArray()
+        let res = await this.db.collection(this.collection).find().toArray()
         return res
     }
 

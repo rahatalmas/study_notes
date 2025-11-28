@@ -21,7 +21,7 @@ export class BlogsService {
   //this method retuns list of blogs from the blogs collection
   //used in findAll() controller
   async findAll() {
-    let blogs = await this.blogRepo.findAllWithAuthor()
+    let blogs = await this.blogRepo.findAllWithRefs()
     if(blogs.length>0){
        return new ResponseInterface({message:"all blogs",data:blogs})
     }else{
